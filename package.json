@@ -1,0 +1,19 @@
+{
+  "name": "promise",
+  "version": "1.0.0",
+  "description": "模拟实现一个符合Promise A+规范的promise",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@jsyt.github.com:jsyt/promise.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
