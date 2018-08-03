@@ -120,13 +120,51 @@ Promise.prototype.then = function(onFulfilled, onRejected){
   return promise2;  // 2.2.7 then must return a promise
 }
 
+Promise.prototype.catch = function(onRejected){
+  return this.then(null, onRejected)
+}
+
+Promise.resolve = function(value){
+  return new Promise((resolve, reject)=>{
+    resolve(value)
+  })
+}
+
+Promise.reject = function(reason){
+  return new Promise((resolve, reject)=>{
+    reject(reason)
+  })
+}
+
+Promise.all = function(arr){
+  let index = 0;
+  let result = []
+  return new Promise((resolve, reject)=>{
+    arr.forEach((promise, i)=>{
+      promise.then(val=>{
+        result[i] = val
+        if(++index === arr.length) {  // 由于then注册的回调函数是异步执行的，无法确定回调函数什么时候执行完成，所以必须得把判断放到回调函数中，这样才能确保所有的异步任务执行完成后在调用resolve
+          resolve(result)
+        }
+      }, reject);
+    })
+  })
+}
+
+Promise.race = function(arr){
+  return new Promise((resolve, reject)=>{
+    arr.forEach((promise, i)=>{
+      promise.then(resolve, reject);
+    })
+  })
+}
+
 Promise.deferred = Promise.defer = function(){
   let defer = {};
   defer.promise = new Promise((resolve, reject)=>{
     defer.resolve = resolve;
     defer.reject = reject;
   })
-
   return defer;
 }
 
