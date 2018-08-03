@@ -14,7 +14,7 @@ promise的详细使用方法可参考[阮一峰老师的文章](http://es6.ruany
 3. 每个`promise`对象都有一个`onFulfilledCallback`队列和一个`onRejectedCallback`队列，用来分别存储成功和失败时调用的回调函数
 4. 每个`promise`有三种状态`pending` 、`fulfilled`、`rejected`，同一时刻只能处于其中一种状态，并且只能从`pending` 、状态转化成`fulfilled`状态，或者`rejected`状态，一旦状态发生转化就不能再被改变。
 5. 当调用`resolve(value)`函数时，`promise`的状态会从`pending`转化成`fulfilled`，并且将`resolve`参数中的`value`值赋值给此`promise`的`value`变量，promise的`value`被赋值后，就不能再次改变了；此时还会去取出`onFulfilledCallback`队列中所有的回调函数，并将此`promise`的`value`作为回调函数的参数，依次执行
-6. 当调用`rejected(reason)`函数时，`promise`的状态会从`pending`转化成`rejected`，并且将`rejected(reason)`函数中的`reason`参数赋值给此`promise`的`reason`变量，这个`reason`被赋值后，也是不能再次改变了；此时还会去取出`onRejectedCallback`队列中所有的回调函数，并将此`promise`的`reason`作为回调函数的参数，依次执行
+6. 当调用`rejected(reason)`函数时，`promise`的状态会从`pending`转化成`rejected`，并且将`rejected(reason)`函数中的`reason`参数赋值给此`promise`的`reason`变量，这个`reason`被赋值后，也是不能再次改变了；此时还会去取出`onRejectedCallback`队列中所有的回调函数，并将此`promise`的`reason`作为回调函数的参数，依次执行
 7. 当executor执行抛异常时捕获这个异常，并将异常的原因作为`reject`函数的参数，执行`reject`函数
 
 根据这些我们先写一个第一版的promise
