@@ -8,13 +8,14 @@ promise的详细使用方法可参考[阮一峰老师的文章](http://es6.ruany
 ### promise雏形
 
 简单点说
-1、`promise`函数的参数（executor）是一个函数，这个函数有两个参数`resolve`和`reject`，这两个参数也都是函数，分别在`promise`成功和失败时调用。
-2、当构建一个`promise`实例时，会自动调用这个函数（executor）
-3、每个`promise`对象都有一个`onFulfilledCallback`队列和一个`onRejectedCallback`队列，用来分别存储成功和失败时调用的回调函数
-4、每个`promise`有三种状态`pending` 、`fulfilled`、`rejected`，同一时刻只能处于其中一种状态，并且只能从`pending` 、状态转化成`fulfilled`状态，或者`rejected`状态，一旦状态发生转化就不能再被改变。
-5、当调用`resolve(value)`函数时，`promise`的状态会从`pending`转化成`fulfilled`，并且将`resolve`参数中的`value`值赋值给此`promise`的`value`变量，promise的`value`被赋值后，就不能再次改变了；此时还会去取出`onFulfilledCallback`队列中所有的回调函数，并将此`promise`的`value`作为回调函数的参数，依次执行
-6、当调用`rejected(reason)`函数时，`promise`的状态会从`pending`转化成`rejected`，并且将`rejected(reason)`函数中的`reason`参数赋值给此`promise`的`reason`变量，这个`reason`被赋值后，也是不能再次改变了；此时还会去取出`onRejectedCallback`队列中所有的回调函数，并将此`promise`的`reason`作为回调函数的参数，依次执行
-7、当executor执行抛异常时捕获这个异常，并将异常的原因作为`reject`函数的参数，执行`reject`函数
+1. `promise` 函数的参数（executor）是一个函数，这个函数有两个参数`resolve`和`reject`，这两个参数也都是函数，分别在`promise`成功和失败时调用。
+
+2. 当构建一个`promise`实例时，会自动调用这个函数（executor）
+3. 每个`promise` 对象都有一个`onFulfilledCallback`队列和一个`onRejectedCallback`队列，用来分别存储成功和失败时调用的回调函数
+4. 每个`promise`有三种状态`pending` 、`fulfilled`、`rejected`，同一时刻只能处于其中一种状态，并且只能从`pending` 、状态转化成`fulfilled`状态，或者`rejected`状态，一旦状态发生转化就不能再被改变。
+5. 当调用`resolve(value)`函数时，`promise`的状态会从`pending`转化成`fulfilled`，并且将`resolve`参数中的`value`值赋值给此`promise`的`value`变量，promise的`value`被赋值后，就不能再次改变了；此时还会去取出`onFulfilledCallback`队列中所有的回调函数，并将此`promise`的`value`作为回调函数的参数，依次执行
+6. 当调用`rejected(reason)`函数时，`promise`的状态会从`pending`转化成`rejected`，并且将`rejected(reason)`函数中的`reason`参数赋值给此`promise`的`reason`变量，这个`reason`被赋值后，也是不能再次改变了；此时还会去取出`onRejectedCallback`队列中所有的回调函数，并将此`promise`的`reason`作为回调函数的参数，依次执行
+7. 当executor执行抛异常时捕获这个异常，并将异常的原因作为`reject`函数的参数，执行`reject`函数
 
 根据这些我们先写一个第一版的promise
 
@@ -53,12 +54,11 @@ function Promise(executor) {
 }
 ```
 ### promise.then
-1、每个`promise`必须提供一个`then`方法，并且`then`方法包含两个参数`onFulfilled` 和 `onRejected`
-2、这两个参数如果不是函数的话就直接忽略，并且将成功或失败的值传递给下一个then注册的回调函数及下一个then的`onFulfilled` 和 `onRejected`
-
-4、当执行then函数时，如果promise的状态是`pending`则将then中注册的成功和失败时对应的回调函数`onFulfilled` 和 `onRejected`分别放入onFulfilledCallback队列和一个onRejectedCallback队列中
-5、如果promise的状态是`fulfilled`，就直接调用`onFulfilled`函数，并且将此`promise`的`value`作为`onFulfilled`函数的第一个参数执行
-6、如果`promise`的状态为`rejected`，就直接调用`onRejected`函数，并且将此`promise`的`reason`作为`onRejected`函数的第一个参数执行
+1. 每个`promise`必须提供一个`then`方法，并且`then`方法包含两个参数`onFulfilled` 和 `onRejected`
+2. 这两个参数如果不是函数的话就直接忽略，并且将成功或失败的值传递给下一个then注册的回调函数及下一个then的`onFulfilled` 和 `onRejected`
+3. 当执行then函数时，如果promise的状态是`pending`则将then中注册的成功和失败时对应的回调函数`onFulfilled` 和 `onRejected`分别放入onFulfilledCallback队列和一个onRejectedCallback队列中
+4. 如果promise的状态是`fulfilled`，就直接调用`onFulfilled`函数，并且将此`promise`的`value`作为`onFulfilled`函数的第一个参数执行
+5. 如果`promise`的状态为`rejected`，就直接调用`onRejected`函数，并且将此`promise`的`reason`作为`onRejected`函数的第一个参数执行
 
 ```js
 Promise.prototype.then = function (onFulfilled, onRejected) {
@@ -77,11 +77,11 @@ Promise.prototype.then = function (onFulfilled, onRejected) {
 ```
 
 ### promise 链式调用
-1、此时的promise 是不支持链式调用的，所以我们应该在then中返回一个新的promise来支持链式调用
+1. 此时的promise 是不支持链式调用的，所以我们应该在then中返回一个新的promise来支持链式调用
 为什么是新的promise，而不是直接返回this呢？
 因为promise的状态一旦发生转变，就不能再次改变了，而链式调用中的then返回的promise是可以选择resolve或者reject的，所以then必须返回一个新的promise
-2、所有的then中注册的回调函数，都应该是异步执行，标准promise的then中注册的回调函数是属于微观任务，我们这里可以用setTimeout来模拟，但是要注意的是setTimeout属于宏观任务
-3、所有的then中注册的异步回调函数都应该放在try{}catch中执行，当执行then 中的回调函数抛出异常时，应该捕获这个异常，并将异常对象传递给reject，并调用reject
+2. 所有的then中注册的回调函数，都应该是异步执行，标准promise的then中注册的回调函数是属于微观任务，我们这里可以用setTimeout来模拟，但是要注意的是setTimeout属于宏观任务
+3. 所有的then中注册的异步回调函数都应该放在try{}catch中执行，当执行then 中的回调函数抛出异常时，应该捕获这个异常，并将异常对象传递给reject，并调用reject
 
 ```js
 Promise.prototype.then = function (onFulfilled, onRejected) {
@@ -183,7 +183,6 @@ function resolvePromise(promise2, x, resolve, reject) {
       called = true;
       reject(e)  // 2.3.3.3.4.2 Otherwise, reject promise with e as the reason
     }
-    
   }else{  // 2.3.4 If x is not an object or function, fulfill promise with x.
     resolve(x)
   }
@@ -303,7 +302,6 @@ function resolvePromise(promise2, x, resolve, reject) {
       called = true;
       reject(e)  // 2.3.3.3.4.2 Otherwise, reject promise with e as the reason
     }
-    
   }else{  // 2.3.4 If x is not an object or function, fulfill promise with x.
     resolve(x)
   }
@@ -435,10 +433,10 @@ Promise.all = function(arr){
     arr.forEach((promise, i)=>{
       promise.then(val=>{
         result[i] = val
+        if(++index === arr.length) {  // 由于then注册的回调函数是异步执行的，无法确定回调函数什么时候执行完成，所以必须得把判断放到回调函数中，这样才能确保所有的异步任务执行完成后在调用resolve
+          resolve(result)
+        }
       }, reject);
-      if(++index === arr.length) {
-        resolve(result)
-      }
     })
   })
 }
