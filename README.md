@@ -39,7 +39,7 @@ function Promise(executor) {
   function reject(reason) {
     if(self.state === 'pending'){
       self.state = 'rejected';
-      self.reason = reason;
+      self.reason = reason;
       self.onRejectedCallback.foreach(fn=>fn(self.reason))
     }
   }
@@ -263,7 +263,7 @@ function Promise(executor) {
   function reject(reason) {
     if(self.state === 'pending'){
       self.state = 'rejected';
-      self.reason = reason;
+      self.reason = reason;
       self.onRejectedCallback.forEach(fn=>fn())
     }
   }
